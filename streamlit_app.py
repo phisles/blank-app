@@ -279,28 +279,6 @@ else:
     st.warning("No recent account activity found.")
 
 st.markdown("""
-<!-- TradingView Widget BEGIN -->
-<div class="tradingview-widget-container">
-  <div class="tradingview-widget-container__widget"></div>
-  <div class="tradingview-widget-copyright">
-    <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank">
-      <span class="blue-text">Track all markets on TradingView</span>
-    </a>
-  </div>
-  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
-  {
-    "symbol": "NASDAQ:AAPL",
-    "width": "100%",
-    "height": "100%",
-    "locale": "en",
-    "dateRange": "1M",
-    "colorTheme": "dark",
-    "isTransparent": true,
-    "autosize": true,
-    "largeChartUrl": "",
-    "chartOnly": false
-  }
-  </script>
-</div>
-<!-- TradingView Widget END -->
+<iframe src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_abcde&symbol=NASDAQ%3AAAPL&interval=D&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&hidevolume=1&hideideas=1&watchlist=NASDAQ%3AAAPL%2CNASDAQ%3AMSFT%2CNASDAQ%3ATSLA%2CNASDAQ%3AAMZN%2CNASDAQ%3AGOOG&utm_source=yourdomain.com&utm_medium=widget&utm_campaign=chart&utm_term=NASDAQ%3AAAPL" 
+width="100%" height="400" frameborder="0" allowtransparency="true" scrolling="no"></iframe>
 """, unsafe_allow_html=True)
