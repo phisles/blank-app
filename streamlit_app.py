@@ -161,7 +161,11 @@ if isinstance(activities_data, list) and activities_data:
         "activity_type": "Type", "symbol": "Symbol", "qty": "Qty",
         "price": "Price", "side": "Side", "transaction_time": "Time", "id": "ID"
     })
-
+    
+    # 🛠 Ensure correct types before formatting
+    df_display["Price"] = pd.to_numeric(df_display["Price"], errors="coerce")
+    df_display["Qty"] = pd.to_numeric(df_display["Qty"], errors="coerce")
+    
     st.dataframe(df_display.sort_values("Time", ascending=False).style.format({
         "Price": "${:.2f}",
         "Qty": "{:.2f}"
