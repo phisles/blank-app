@@ -82,6 +82,12 @@ st.markdown(f"""
 **📊 Total P/L %:** <span style='color:{pl_color}'>{pl_percent:.2f}%</span>
 """, unsafe_allow_html=True)
 
+# --- Additional Info ---
+info_cols = st.columns(3)
+info_cols[0].markdown(f"**💰 Equity:** ${float(account_data.get('equity', 0.0)):,}")
+info_cols[1].markdown(f"**🧾 Portfolio Value:** ${float(account_data.get('portfolio_value', 0.0)):,}")
+info_cols[2].markdown(f"**💵 Buying Power:** ${float(account_data.get('buying_power', 0.0)):,}")
+
 # --- Positions ---
 st.subheader("📈 Current Positions")
 positions_data = fetch_positions()
