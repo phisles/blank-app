@@ -21,16 +21,20 @@ st.set_page_config(page_title="📈 Alpaca Portfolio Dashboard", layout="wide")
 st.title("📊 Alpaca Trading Algo: Live Portfolio Overview")
 
 # --- Functions ---
-def fetch_portfolio_history(timeframe, period):
+def fetch_portfolio_history(timeframe="5Min", period="1D"):
     url = (
         f"{BASE_URL}/v2/account/portfolio/history"
-        f"?period={period}&timeframe={timeframe}&intraday_reporting=extended_hours"
-        + ("&pnl_reset=per_day" if timeframe != "1D" else "")
+        f"?period={period}&timeframe={timeframe}&pnl_reset=continuous"
     )
     response = requests.get(url, headers=HEADERS)
-    data = response.json()
-    if "timestamp" not in data:
-        st.error(f"Alpaca Error: {data}")
+    try:
+        data = response.json()
+    except Exception as e:
+        st.error(f"❌ Failed to parse portfolio history: {e}")
+        return pd.DataFrame()
+
+    if "timestamp" not in data or not data["timestamp"]:
+        st.warning(f"⚠️ No portfolio history data returned.")
         return pd.DataFrame()
 
     df = pd.DataFrame({
