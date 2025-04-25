@@ -69,6 +69,11 @@ pl_percent = ((latest_equity - STARTING_PORTFOLIO_VALUE) / STARTING_PORTFOLIO_VA
 
 # --- Widget-style Summary ---
 # --- Widget-style Summary with Colors and Averages ---
+# --- Summary Stats Setup ---
+buying_power = float(account_data.get("buying_power", 0.0))
+margin_used = float(account_data.get("initial_margin", 0.0))
+margin_req = float(account_data.get("maintenance_margin", 0.0))
+
 avg_pl_dollar = pl_dollar / DAYS_RUNNING if DAYS_RUNNING else 0
 avg_pl_percent = pl_percent / DAYS_RUNNING if DAYS_RUNNING else 0
 
@@ -76,45 +81,82 @@ value_color = "green" if latest_equity > STARTING_PORTFOLIO_VALUE else "red"
 pl_color = "green" if pl_dollar > 0 else "red" if pl_dollar < 0 else "black"
 avg_color = "green" if avg_pl_dollar > 0 else "red" if avg_pl_dollar < 0 else "black"
 
-main_cols = st.columns(2)
-main_cols[0].markdown(f"""
-<div style="font-size:24px;">📦 <b>Starting Value</b></div>
-<div style="font-size:40px;"><b>${STARTING_PORTFOLIO_VALUE:,.2f}</b></div>
-""", unsafe_allow_html=True)
-main_cols[1].markdown(f"""
-<div style="font-size:24px;">💼 <b>Current Value</b></div>
-<div style="font-size:40px; color:{value_color};"><b>${latest_equity:,.2f}</b></div>
-""", unsafe_allow_html=True)
-
-sub_cols = st.columns(4)
-sub_cols[0].markdown(f"📈 **P/L $**\n\n<span style='font-size:26px; color:{pl_color};'><b>${pl_dollar:,.2f}</b></span>", unsafe_allow_html=True)
-sub_cols[1].markdown(f"📊 **P/L %**\n\n<span style='font-size:26px; color:{pl_color};'><b>{pl_percent:.2f}%</b></span>", unsafe_allow_html=True)
-sub_cols[2].markdown(f"📆 **Avg Daily $**\n\n<span style='font-size:26px; color:{avg_color};'><b>${avg_pl_dollar:.2f}</b></span>", unsafe_allow_html=True)
-sub_cols[3].markdown(f"📆 **Avg Daily %**\n\n<span style='font-size:26px; color:{avg_color};'><b>{avg_pl_percent:.2f}%</b></span>", unsafe_allow_html=True)
-
-# --- Informational Text ---
-# --- Informational Text ---
-buying_power = float(account_data.get("buying_power", 0.0))
-margin_used = float(account_data.get("initial_margin", 0.0))
-margin_req = float(account_data.get("maintenance_margin", 0.0))
-
-info_cols = st.columns(3)
-
-info_cols[0].markdown(f"""
-<div style="font-size:18px; padding:6px; background-color:#1a1a1a; border-radius:6px;">
-💵 <b>Buying Power</b><br><span style='font-size:22px; color:#00ffcc;'>${buying_power:,.2f}</span>
+# --- Summary Boxes: Row 1 ---
+row1 = st.columns(2)
+row1[0].markdown(f"""
+<div style="padding:12px; border-radius:8px; background-color:#111111;">
+<div style="font-size:16px; color:#888;">Starting Value</div>
+<div style="font-size:38px; font-weight:bold;">${STARTING_PORTFOLIO_VALUE:,.2f}</div>
 </div>
 """, unsafe_allow_html=True)
 
-info_cols[1].markdown(f"""
-<div style="font-size:18px; padding:6px; background-color:#1a1a1a; border-radius:6px;">
-📉 <b>Margin Used</b><br><span style='font-size:22px; color:#ff6666;'>${margin_used:,.2f}</span>
+row1[1].markdown(f"""
+<div style="padding:12px; border-radius:8px; background-color:#111111;">
+<div style="font-size:16px; color:#888;">Current Value</div>
+<div style="font-size:38px; font-weight:bold; color:{value_color};">${latest_equity:,.2f}</div>
 </div>
 """, unsafe_allow_html=True)
 
-info_cols[2].markdown(f"""
-<div style="font-size:18px; padding:6px; background-color:#1a1a1a; border-radius:6px;">
-📊 <b>Margin Requirement</b><br><span style='font-size:22px; color:#ffaa00;'>${margin_req:,.2f}</span>
+# --- Summary Boxes: Row 2 ---
+row2 = st.columns(4)
+row2[0].markdown(f"""
+<div style="padding:10px; border-radius:8px; background-color:#111111;">
+<div style="font-size:15px; color:#888;">P/L $</div>
+<div style="font-size:26px; font-weight:bold; color:{pl_color};">${pl_dollar:,.2f}</div>
+</div>
+""", unsafe_allow_html=True)
+
+row2[1].markdown(f"""
+<div style="padding:10px; border-radius:8px; background-color:#111111;">
+<div style="font-size:15px; color:#888;">P/L %</div>
+<div style="font-size:26px; font-weight:bold; color:{pl_color};">{pl_percent:.2f}%</div>
+</div>
+""", unsafe_allow_html=True)
+
+row2[2].markdown(f"""
+<div style="padding:10px; border-radius:8px; background-color:#111111;">
+<div style="font-size:15px; color:#888;">Avg Daily $</div>
+<div style="font-size:26px; font-weight:bold; color:{avg_color};">${avg_pl_dollar:.2f}</div>
+</div>
+""", unsafe_allow_html=True)
+
+row2[3].markdown(f"""
+<div style="padding:10px; border-radius:8px; background-color:#111111;">
+<div style="font-size:15px; color:#888;">Avg Daily %</div>
+<div style="font-size:26px; font-weight:bold; color:{avg_color};">{avg_pl_percent:.2f}%</div>
+</div>
+""", unsafe_allow_html=True)
+
+# --- Summary Boxes: Row 3 ---
+row3 = st.columns(3)
+row3[0].markdown(f"""
+<div style="padding:10px; border-radius:8px; background-color:#111111;">
+<div style="font-size:15px; color:#888;">Buying Power</div>
+<div style="font-size:26px; font-weight:bold; color:#00ffcc;">${buying_power:,.2f}</div>
+</div>
+""", unsafe_allow_html=True)
+
+row3[1].markdown(f"""
+<div style="padding:10px; border-radius:8px; background-color:#111111;">
+<div style="font-size:15px; color:#888;">Margin Used</div>
+<div style="font-size:26px; font-weight:bold; color:#ff6666;">${margin_used:,.2f}</div>
+</div>
+""", unsafe_allow_html=True)
+
+row3[2].markdown(f"""
+<div style="padding:10px; border-radius:8px; background-color:#111111;">
+<div style="font-size:15px; color:#888;">Margin Requirement</div>
+<div style="font-size:26px; font-weight:bold; color:#ffaa00;">${margin_req:,.2f}</div>
+</div>
+""", unsafe_allow_html=True)
+
+# --- Summary: Start Date and Days Running ---
+st.markdown(f"""
+<div style="margin-top: 10px; padding:10px; border-radius:8px; background-color:#111111;">
+<div style="font-size:15px; color:#888;">Started</div>
+<div style="font-size:20px; font-weight:bold;">
+{START_DATE.strftime('%B %d, %Y')} &nbsp; | &nbsp; Days Running: {DAYS_RUNNING}
+</div>
 </div>
 """, unsafe_allow_html=True)
 
