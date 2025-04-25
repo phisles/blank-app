@@ -93,6 +93,11 @@ sub_cols[2].markdown(f"📆 **Avg Daily $**\n\n<span style='font-size:26px; colo
 sub_cols[3].markdown(f"📆 **Avg Daily %**\n\n<span style='font-size:26px; color:{avg_color};'><b>{avg_pl_percent:.2f}%</b></span>", unsafe_allow_html=True)
 
 # --- Informational Text ---
+# --- Informational Text ---
+buying_power = float(account_data.get("buying_power", 0.0))
+margin_used = float(account_data.get("initial_margin", 0.0))
+margin_req = float(account_data.get("maintenance_margin", 0.0))
+
 info_cols = st.columns(3)
 
 info_cols[0].markdown(f"""
