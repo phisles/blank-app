@@ -93,19 +93,23 @@ sub_cols[2].markdown(f"📆 **Avg Daily $**\n\n<span style='font-size:26px; colo
 sub_cols[3].markdown(f"📆 **Avg Daily %**\n\n<span style='font-size:26px; color:{avg_color};'><b>{avg_pl_percent:.2f}%</b></span>", unsafe_allow_html=True)
 
 # --- Informational Text ---
-st.markdown(f"""
-<small>📆 Started: {START_DATE.strftime('%B %d, %Y')} | ⏱ Days Running: {DAYS_RUNNING}</small>
+info_cols = st.columns(3)
+
+info_cols[0].markdown(f"""
+<div style="font-size:18px; padding:6px; background-color:#1a1a1a; border-radius:6px;">
+💵 <b>Buying Power</b><br><span style='font-size:22px; color:#00ffcc;'>${buying_power:,.2f}</span>
+</div>
 """, unsafe_allow_html=True)
 
-buying_power = float(account_data.get("buying_power", 0.0))
-margin_used = float(account_data.get("initial_margin", 0.0))
-margin_req = float(account_data.get("maintenance_margin", 0.0))
+info_cols[1].markdown(f"""
+<div style="font-size:18px; padding:6px; background-color:#1a1a1a; border-radius:6px;">
+📉 <b>Margin Used</b><br><span style='font-size:22px; color:#ff6666;'>${margin_used:,.2f}</span>
+</div>
+""", unsafe_allow_html=True)
 
-st.markdown(f"""
-<div style="font-size:14px; white-space: nowrap;">
-💵 <b>Buying Power:</b> ${buying_power:,.2f} &nbsp;&nbsp;|&nbsp;&nbsp;
-📉 <b>Margin Used:</b> ${margin_used:,.2f} &nbsp;&nbsp;|&nbsp;&nbsp;
-📊 <b>Margin Requirement:</b> ${margin_req:,.2f}
+info_cols[2].markdown(f"""
+<div style="font-size:18px; padding:6px; background-color:#1a1a1a; border-radius:6px;">
+📊 <b>Margin Requirement</b><br><span style='font-size:22px; color:#ffaa00;'>${margin_req:,.2f}</span>
 </div>
 """, unsafe_allow_html=True)
 
