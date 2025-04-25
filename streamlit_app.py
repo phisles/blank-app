@@ -62,11 +62,12 @@ def fetch_account_activities():
 # --- Account Summary ---
 st.subheader("📋 Account Summary")
 account_data = fetch_account_info()
-st.columns(5)[0].metric("💰 Equity", f"${float(account_data.get("equity", 0.0)):,}")
-st.columns(5)[1].metric("🧾 Portfolio Value", f"${float(account_data.get("portfolio_value", 0.0)):,}")
-st.columns(5)[2].metric("💵 Buying Power", f"${float(account_data.get("buying_power", 0.0)):,}")
-st.columns(5)[3].metric("📉 Margin Used", f"${float(account_data.get("margin_used", 0.0)):,}")
-st.columns(5)[4].metric("📊 Maintenance Margin", f"${float(account_data.get("maintenance_margin", 0.0)):,}")
+col1, col2, col3, col4, col5 = st.columns(5)
+col1.metric("💰 Equity", f"${float(account_data.get('equity', 0.0)):,}")
+col2.metric("🧾 Portfolio Value", f"${float(account_data.get('portfolio_value', 0.0)):,}")
+col3.metric("💵 Buying Power", f"${float(account_data.get('buying_power', 0.0)):,}")
+col4.metric("📉 Margin Used", f"${float(account_data.get('margin_used', 0.0)):,}")
+col5.metric("📊 Maintenance Margin", f"${float(account_data.get('maintenance_margin', 0.0)):,}")
 
 # --- Positions ---
 st.subheader("📈 Current Positions")
