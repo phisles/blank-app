@@ -16,39 +16,6 @@ HEADERS = {
 }
 
 st.set_page_config(page_title="Alpaca Dashboard", layout="wide")
-st.markdown("""
-<style>
-/* Force background and text to dark mode */
-body, .main, .block-container {
-    background-color: #0e1117 !important;
-    color: #FFFFFF !important;
-}
-
-/* Force widget backgrounds and borders */
-.stButton>button, .stSelectbox, .stTextInput>div>div>input,
-.stDataFrame, .stMarkdown, .stTextArea>div>textarea {
-    background-color: #1c1c1c !important;
-    color: #FFFFFF !important;
-    border: 1px solid #444 !important;
-}
-
-/* Dropdown & select box */
-.css-1wa3eu0-control {
-    background-color: #1c1c1c !important;
-    color: #FFFFFF !important;
-}
-
-/* Table headers and cells */
-thead tr th {
-    background-color: #1c1c1c !important;
-    color: #FFFFFF !important;
-}
-tbody tr td {
-    background-color: #1c1c1c !important;
-    color: #FFFFFF !important;
-}
-</style>
-""", unsafe_allow_html=True)
 st.markdown("""<style>* { font-family: Courier, monospace !important; }</style>""", unsafe_allow_html=True)
 st.title("📈 Alpaca Trading Algo: Live Portfolio Overview")
 
@@ -122,14 +89,14 @@ st.markdown("""
 
 row1 = st.columns(2)
 row1[0].markdown(f"""
-<div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444; width: 100%;">
+<div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444;">
 <div style="font-size:16px; color:#888;">Starting Value</div>
 <div style="font-size:38px; font-family: Courier, monospace;">${STARTING_PORTFOLIO_VALUE:,.2f}</div>
 </div>
 """, unsafe_allow_html=True)
 
 row1[1].markdown(f"""
-<div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444; width: 100%;">
+<div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444;">
 <div style="font-size:16px; color:#888;">Current Value</div>
 <div style="font-size:38px; font-family: Courier, monospace; color:{value_color};">${latest_equity:,.2f}</div>
 </div>
@@ -137,28 +104,28 @@ row1[1].markdown(f"""
 
 row2 = st.columns(4)
 row2[0].markdown(f"""
-<div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444; width: 100%;">
+<div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444;">
 <div style="font-size:15px; color:#888;">P/L $</div>
 <div style="font-size:26px; font-family: Courier, monospace; color:{pl_color};">${pl_dollar:,.2f}</div>
 </div>
 """, unsafe_allow_html=True)
 
 row2[1].markdown(f"""
-<div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444; width: 100%;">
+<div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444;">
 <div style="font-size:15px; color:#888;">P/L %</div>
 <div style="font-size:26px; font-family: Courier, monospace; color:{pl_color};">{pl_percent:.2f}%</div>
 </div>
 """, unsafe_allow_html=True)
 
 row2[2].markdown(f"""
-<div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444; width: 100%;">
+<div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444;">
 <div style="font-size:15px; color:#888;">Avg Daily $</div>
 <div style="font-size:26px; font-family: Courier, monospace; color:{avg_color};">${avg_pl_dollar:.2f}</div>
 </div>
 """, unsafe_allow_html=True)
 
 row2[3].markdown(f"""
-<div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444; width: 100%;">
+<div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444;">
 <div style="font-size:15px; color:#888;">Avg Daily %</div>
 <div style="font-size:26px; font-family: Courier, monospace; color:{avg_color};">{avg_pl_percent:.2f}%</div>
 </div>
@@ -166,21 +133,21 @@ row2[3].markdown(f"""
 
 row3 = st.columns(3)
 row3[0].markdown(f"""
-<div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444; width: 100%;">
+<div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444;">
 <div style="font-size:15px; color:#888;">Buying Power</div>
 <div style="font-size:26px; font-family: Courier, monospace; color:#00ffcc;">${buying_power:,.2f}</div>
 </div>
 """, unsafe_allow_html=True)
 
 row3[1].markdown(f"""
-<div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444; width: 100%;">
+<div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444;">
 <div style="font-size:15px; color:#888;">Margin Used</div>
 <div style="font-size:26px; font-family: Courier, monospace; color:#ff6666;">${margin_used:,.2f}</div>
 </div>
 """, unsafe_allow_html=True)
 
 row3[2].markdown(f"""
-<div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444; width: 100%;">
+<div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444;">
 <div style="font-size:15px; color:#888;">Margin Requirement</div>
 <div style="font-size:26px; font-family: Courier, monospace; color:#ffaa00;">${margin_req:,.2f}</div>
 </div>
