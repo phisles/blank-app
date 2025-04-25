@@ -95,6 +95,13 @@ sub_cols[3].markdown(f"📆 **Avg Daily %**\n\n<span style='font-size:26px; colo
 # --- Informational Text ---
 st.markdown(f"""
 <small>📆 Started: {START_DATE.strftime('%B %d, %Y')} | ⏱ Days Running: {DAYS_RUNNING}</small>
+buying_power = float(account_data.get("buying_power", 0.0))
+margin_used = float(account_data.get("margin_used", 0.0))
+margin_req = float(account_data.get("margin_requirement", 0.0))
+
+st.markdown(f"""
+<small>💵 Buying Power: ${buying_power:,.2f} | 📉 Margin Used: ${margin_used:,.2f} | 📊 Margin Requirement: ${margin_req:,.2f}</small>
+""", unsafe_allow_html=True)
 """, unsafe_allow_html=True)
 
 # --- Positions ---
@@ -172,9 +179,29 @@ if isinstance(activities_data, list) and activities_data:
         "activity_type": "Type", "symbol": "Symbol", "side": "Side", "transaction_time": "Time"
     })
 
-    filter_type = st.selectbox("Filter by Activity Type", options=["All"] + sorted(df_display["Type"].dropna().unique()))
+    col1, col2, col3, col4 = st.columns(4)
+    activity_types = ["All"] + sorted(df_display["Type"].dropna().unique())
+    symbols = ["All"] + sorted(df_display["Symbol"].dropna().unique())
+    sides = ["All"] + sorted(df_display["Side"].dropna().unique())
+    dates = ["All"] + sorted(df_display["Time"].dt.date.unique().astype(str))
+    
+    with col1:
+        filter_type = st.selectbox("Activity Type", options=activity_types)
+    with col2:
+        filter_symbol = st.selectbox("Symbol", options=symbols)
+    with col3:
+        filter_side = st.selectbox("Side", options=sides)
+    with col4:
+        filter_date = st.selectbox("Date", options=dates)
+    
     if filter_type != "All":
         df_display = df_display[df_display["Type"] == filter_type]
+    if filter_symbol != "All":
+        df_display = df_display[df_display["Symbol"] == filter_symbol]
+    if filter_side != "All":
+        df_display = df_display[df_display["Side"] == filter_side]
+    if filter_date != "All":
+        df_display = df_display[df_display["Time"].dt.date.astype(str) == filter_date]
 
     df_display = df_display.sort_values("Time", ascending=False)
 
