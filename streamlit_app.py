@@ -23,12 +23,6 @@ STARTING_PORTFOLIO_VALUE = 2000.00
 START_DATE = date(2025, 4, 22)
 DAYS_RUNNING = (date.today() - START_DATE).days
 
-st.markdown(f"""
-### 📆 Started: **{START_DATE.strftime('%B %d, %Y')}**
-### ⏱ Days Running: **{DAYS_RUNNING}**
-### 💼 Starting Portfolio Value: **${STARTING_PORTFOLIO_VALUE:,.2f}**
-""")
-
 # --- Fetch Functions ---
 def fetch_portfolio_history(timeframe="5Min", period="1D"):
     url = (
@@ -68,25 +62,25 @@ def fetch_account_activities():
     return response.json()
 
 # --- Account Summary ---
-st.subheader("📋 Account Summary")
 account_data = fetch_account_info()
-
 latest_equity = float(account_data.get("portfolio_value", 0.0))
 pl_dollar = latest_equity - STARTING_PORTFOLIO_VALUE
 pl_percent = ((latest_equity - STARTING_PORTFOLIO_VALUE) / STARTING_PORTFOLIO_VALUE) * 100
 
-pl_color = "green" if pl_dollar > 0 else "red" if pl_dollar < 0 else "black"
+# --- Widget-style Summary ---
+main_cols = st.columns(2)
+main_cols[0].metric("📦 Starting Value", f"${STARTING_PORTFOLIO_VALUE:,.2f}")
+main_cols[1].metric("💼 Current Value", f"${latest_equity:,.2f}")
 
+sub_cols = st.columns(3)
+sub_cols[0].metric("📈 P/L $", f"${pl_dollar:,.2f}", delta_color="inverse" if pl_dollar < 0 else "normal")
+sub_cols[1].metric("📊 P/L %", f"{pl_percent:.2f}%", delta_color="inverse" if pl_percent < 0 else "normal")
+sub_cols[2].metric("💵 Buying Power", f"${float(account_data.get('buying_power', 0.0)):,}")
+
+# --- Informational Text ---
 st.markdown(f"""
-**📈 Total P/L:** <span style='color:{pl_color}'>${pl_dollar:,.2f}</span><br>
-**📊 Total P/L %:** <span style='color:{pl_color}'>{pl_percent:.2f}%</span>
+<small>📆 Started: {START_DATE.strftime('%B %d, %Y')} | ⏱ Days Running: {DAYS_RUNNING}</small>
 """, unsafe_allow_html=True)
-
-# --- Additional Info ---
-info_cols = st.columns(3)
-info_cols[0].markdown(f"**💰 Equity:** ${float(account_data.get('equity', 0.0)):,}")
-info_cols[1].markdown(f"**🧾 Portfolio Value:** ${float(account_data.get('portfolio_value', 0.0)):,}")
-info_cols[2].markdown(f"**💵 Buying Power:** ${float(account_data.get('buying_power', 0.0)):,}")
 
 # --- Positions ---
 st.subheader("📈 Current Positions")
