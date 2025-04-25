@@ -91,7 +91,7 @@ row1 = st.columns(2)
 row1[0].markdown(f"""
 <div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444;">
 <div style="font-size:16px; color:#888;">Starting Value</div>
-<div style="font-size:38px; font-family: Courier, monospace;">${STARTING_PORTFOLIO_VALUE:,.2f}</div>
+<div style="font-size:38px; font-family: Courier, monospace; color:#ffffff;">${STARTING_PORTFOLIO_VALUE:,.2f}</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -156,7 +156,7 @@ row3[2].markdown(f"""
 st.markdown(f"""
 <div style="margin-top: 10px; margin-left:5px; margin-right:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444;">
 <div style="font-size:15px; color:#888;">Started</div>
-<div style="font-size:20px; font-family: Courier, monospace;">
+<div style="font-size:20px; font-family: Courier, monospace; color:#ffffff;">
 {START_DATE.strftime('%B %d, %Y')} &nbsp; | &nbsp; Days Running: {DAYS_RUNNING}
 </div>
 </div>
