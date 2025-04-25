@@ -15,9 +15,9 @@ HEADERS = {
     "APCA-API-SECRET-KEY": API_SECRET
 }
 
-st.set_page_config(page_title="Alpaca Dashboard", layout="wide")
+st.set_page_config(page_title="AI Hedge Fund Dashboard", layout="wide")
 st.markdown("""<style>* { font-family: Courier, monospace !important; }</style>""", unsafe_allow_html=True)
-st.title("📈 Alpaca Trading Algo: Live Portfolio Overview")
+st.title("AI Hedge Fund Simulator")
 
 # --- Starting Values ---
 STARTING_PORTFOLIO_VALUE = 2000.00
@@ -222,7 +222,7 @@ else:
     st.warning("No positions found.")
 
 # --- Activities ---
-st.subheader("📜 Recent Account Activities")
+st.subheader("Recent Account Activities")
 activities_data = fetch_account_activities()
 
 if isinstance(activities_data, list) and activities_data:
