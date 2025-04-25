@@ -16,6 +16,39 @@ HEADERS = {
 }
 
 st.set_page_config(page_title="Alpaca Dashboard", layout="wide")
+st.markdown("""
+<style>
+/* Force background and text to dark mode */
+body, .main, .block-container {
+    background-color: #0e1117 !important;
+    color: #FFFFFF !important;
+}
+
+/* Force widget backgrounds and borders */
+.stButton>button, .stSelectbox, .stTextInput>div>div>input,
+.stDataFrame, .stMarkdown, .stTextArea>div>textarea {
+    background-color: #1c1c1c !important;
+    color: #FFFFFF !important;
+    border: 1px solid #444 !important;
+}
+
+/* Dropdown & select box */
+.css-1wa3eu0-control {
+    background-color: #1c1c1c !important;
+    color: #FFFFFF !important;
+}
+
+/* Table headers and cells */
+thead tr th {
+    background-color: #1c1c1c !important;
+    color: #FFFFFF !important;
+}
+tbody tr td {
+    background-color: #1c1c1c !important;
+    color: #FFFFFF !important;
+}
+</style>
+""", unsafe_allow_html=True)
 st.markdown("""<style>* { font-family: Courier, monospace !important; }</style>""", unsafe_allow_html=True)
 st.title("📈 Alpaca Trading Algo: Live Portfolio Overview")
 
