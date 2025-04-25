@@ -16,6 +16,7 @@ HEADERS = {
 }
 
 st.set_page_config(page_title="Alpaca Dashboard", layout="wide")
+st.markdown("""<style>* { font-family: Courier, monospace !important; }</style>""", unsafe_allow_html=True)
 st.title("📈 Alpaca Trading Algo: Live Portfolio Overview")
 
 # --- Starting Values ---
