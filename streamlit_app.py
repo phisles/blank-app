@@ -105,6 +105,8 @@ st.markdown(f"""
 <small>💵 Buying Power: ${buying_power:,.2f} | 📉 Margin Used: ${margin_used:,.2f} | 📊 Margin Requirement: ${margin_req:,.2f}</small>
 """, unsafe_allow_html=True)
 
+positions_data = fetch_positions()
+
 if isinstance(positions_data, list) and positions_data:
     df = pd.DataFrame(positions_data)
     df = df.astype({
