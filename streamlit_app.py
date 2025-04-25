@@ -102,7 +102,11 @@ margin_used = float(account_data.get("initial_margin", 0.0))
 margin_req = float(account_data.get("maintenance_margin", 0.0))
 
 st.markdown(f"""
-<small>💵 Buying Power: ${buying_power:,.2f} | 📉 Margin Used: ${margin_used:,.2f} | 📊 Margin Requirement: ${margin_req:,.2f}</small>
+<div style="font-size:14px; white-space: nowrap;">
+💵 <b>Buying Power:</b> ${buying_power:,.2f} &nbsp;&nbsp;|&nbsp;&nbsp;
+📉 <b>Margin Used:</b> ${margin_used:,.2f} &nbsp;&nbsp;|&nbsp;&nbsp;
+📊 <b>Margin Requirement:</b> ${margin_req:,.2f}
+</div>
 """, unsafe_allow_html=True)
 
 positions_data = fetch_positions()
