@@ -199,7 +199,7 @@ if isinstance(positions_data, list) and positions_data:
             elif val < 0:
                 return "color: red"
         return ""
-
+    df_display.reset_index(drop=True, inplace=True)
     st.dataframe(df_display.style.applymap(highlight_color, subset=[
         "PL $", "PL %", "Intraday $", "Intraday %", "Chg Today %"
     ]).format({
@@ -266,7 +266,7 @@ if isinstance(activities_data, list) and activities_data:
             elif val < 0:
                 return "color: red"
         return ""
-
+    df_display.reset_index(drop=True, inplace=True)
     st.dataframe(df_display.style.applymap(highlight_activities, subset=["Qty", "Price"]).format({
         "Price": "${:.2f}",
         "Qty": "{:.2f}"
