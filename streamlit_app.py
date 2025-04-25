@@ -2,11 +2,9 @@ import os
 import requests
 import streamlit as st
 import pandas as pd
-import altair as alt
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-# Load from Streamlit secrets
 API_KEY = st.secrets["APCA_API_KEY_ID"]
 API_SECRET = st.secrets["APCA_API_SECRET_KEY"]
 BASE_URL = st.secrets["APCA_API_BASE_URL"]
@@ -17,10 +15,13 @@ HEADERS = {
     "APCA-API-SECRET-KEY": API_SECRET
 }
 
-st.set_page_config(page_title="📈 Alpaca Portfolio Dashboard", layout="wide")
-st.title("📊 Alpaca Trading Algo: Live Portfolio Overview")
+st.set_page_config(page_title="Alpaca Dashboard", layout="wide")
+st.title("📈 Alpaca Trading Algo: Live Portfolio Overview")
 
-# --- Functions ---
+STARTING_PORTFOLIO_VALUE = 2000.00
+st.metric("🚀 Starting Portfolio Value", f"${STARTING_PORTFOLIO_VALUE:,.2f}")
+
+# --- Fetch Functions ---
 def fetch_portfolio_history(timeframe="5Min", period="1D"):
     url = (
         f"{BASE_URL}/v2/account/portfolio/history"
@@ -34,7 +35,7 @@ def fetch_portfolio_history(timeframe="5Min", period="1D"):
         return pd.DataFrame()
 
     if "timestamp" not in data or not data["timestamp"]:
-        st.warning(f"⚠️ No portfolio history data returned.")
+        st.warning("⚠️ No portfolio history data returned.")
         return pd.DataFrame()
 
     df = pd.DataFrame({
@@ -58,52 +59,16 @@ def fetch_account_activities():
     response = requests.get(url, headers=HEADERS)
     return response.json()
 
-# --- Portfolio History Charts ---
-st.subheader("📊 Portfolio Equity Over Time")
-hourly_df = fetch_portfolio_history("1H", "1D")
-daily_df = fetch_portfolio_history("1D", "1W")
-
-if not hourly_df.empty:
-    st.altair_chart(
-        alt.Chart(hourly_df).mark_line(point=True).encode(
-            x="Time:T",
-            y=alt.Y("Equity:Q", title="Equity ($)"),
-            tooltip=["Time:T", "Equity:Q"]
-        ).properties(title="Equity (Hourly View)", width="container"), use_container_width=True
-    )
-
-if not daily_df.empty:
-    st.altair_chart(
-        alt.Chart(daily_df).mark_line(point=True).encode(
-            x="Time:T",
-            y=alt.Y("Equity:Q", title="Equity ($)"),
-            tooltip=["Time:T", "Equity:Q"]
-        ).properties(title="Equity (Daily View)", width="container"), use_container_width=True
-    )
-
-st.subheader("📈 Profit / Loss Percent Over Time")
-if not daily_df.empty:
-    st.altair_chart(
-        alt.Chart(daily_df).mark_bar().encode(
-            x="Time:T",
-            y=alt.Y("P/L %:Q", title="P/L %"),
-            color=alt.condition("datum['P/L %'] >= 0", alt.value("green"), alt.value("red")),
-            tooltip=["Time:T", "P/L %:Q"]
-        ).properties(title="P/L % by Day", width="container"), use_container_width=True
-    )
-
 # --- Account Summary ---
 st.subheader("📋 Account Summary")
 account_data = fetch_account_info()
-st.markdown(f"""
-- 💰 **Equity**: ${float(account_data.get("equity", 0.0)):,}
-- 🧾 **Portfolio Value**: ${float(account_data.get("portfolio_value", 0.0)):,}
-- 💵 **Buying Power**: ${float(account_data.get("buying_power", 0.0)):,}
-- 📉 **Margin Used**: ${float(account_data.get("margin_used", 0.0)):,}
-- 📊 **Maintenance Margin**: ${float(account_data.get("maintenance_margin", 0.0)):,}
-""")
+st.columns(5)[0].metric("💰 Equity", f"${float(account_data.get("equity", 0.0)):,}")
+st.columns(5)[1].metric("🧾 Portfolio Value", f"${float(account_data.get("portfolio_value", 0.0)):,}")
+st.columns(5)[2].metric("💵 Buying Power", f"${float(account_data.get("buying_power", 0.0)):,}")
+st.columns(5)[3].metric("📉 Margin Used", f"${float(account_data.get("margin_used", 0.0)):,}")
+st.columns(5)[4].metric("📊 Maintenance Margin", f"${float(account_data.get("maintenance_margin", 0.0)):,}")
 
-# --- Current Positions ---
+# --- Positions ---
 st.subheader("📈 Current Positions")
 positions_data = fetch_positions()
 
@@ -137,7 +102,17 @@ if isinstance(positions_data, list) and positions_data:
         "unrealized_intraday_plpc": "Intraday %", "lastday_price": "LastDay $", "change_today": "Chg Today %"
     })
 
-    st.dataframe(df_display.style.format({
+    def highlight_color(val):
+        if isinstance(val, (int, float)):
+            if val > 0:
+                return "color: green"
+            elif val < 0:
+                return "color: red"
+        return ""
+
+    st.dataframe(df_display.style.applymap(highlight_color, subset=[
+        "PL $", "PL %", "Intraday $", "Intraday %", "Chg Today %"
+    ]).format({
         "Entry $": "${:.2f}",
         "Cur $": "${:.2f}",
         "Market Val": "${:.2f}",
@@ -152,25 +127,37 @@ if isinstance(positions_data, list) and positions_data:
 else:
     st.warning("No positions found.")
 
-# --- Account Activities ---
+# --- Activities ---
 st.subheader("📜 Recent Account Activities")
 activities_data = fetch_account_activities()
 
 if isinstance(activities_data, list) and activities_data:
     df_activities = pd.DataFrame(activities_data)
     df_activities["transaction_time"] = pd.to_datetime(df_activities["transaction_time"])
+    df_activities["Price"] = pd.to_numeric(df_activities["price"], errors="coerce")
+    df_activities["Qty"] = pd.to_numeric(df_activities["qty"], errors="coerce")
+
     df_display = df_activities[[
-        "activity_type", "symbol", "qty", "price", "side", "transaction_time", "id"
+        "activity_type", "symbol", "Qty", "Price", "side", "transaction_time"
     ]].rename(columns={
-        "activity_type": "Type", "symbol": "Symbol", "qty": "Qty",
-        "price": "Price", "side": "Side", "transaction_time": "Time", "id": "ID"
+        "activity_type": "Type", "symbol": "Symbol", "side": "Side", "transaction_time": "Time"
     })
-    
-    # 🛠 Ensure correct types before formatting
-    df_display["Price"] = pd.to_numeric(df_display["Price"], errors="coerce")
-    df_display["Qty"] = pd.to_numeric(df_display["Qty"], errors="coerce")
-    
-    st.dataframe(df_display.sort_values("Time", ascending=False).style.format({
+
+    filter_type = st.selectbox("Filter by Activity Type", options=["All"] + sorted(df_display["Type"].dropna().unique()))
+    if filter_type != "All":
+        df_display = df_display[df_display["Type"] == filter_type]
+
+    df_display = df_display.sort_values("Time", ascending=False)
+
+    def highlight_activities(val):
+        if isinstance(val, (int, float)):
+            if val > 0:
+                return "color: green"
+            elif val < 0:
+                return "color: red"
+        return ""
+
+    st.dataframe(df_display.style.applymap(highlight_activities, subset=["Qty", "Price"]).format({
         "Price": "${:.2f}",
         "Qty": "{:.2f}"
     }), use_container_width=True)
