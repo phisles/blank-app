@@ -95,6 +95,8 @@ sub_cols[3].markdown(f"📆 **Avg Daily %**\n\n<span style='font-size:26px; colo
 # --- Informational Text ---
 st.markdown(f"""
 <small>📆 Started: {START_DATE.strftime('%B %d, %Y')} | ⏱ Days Running: {DAYS_RUNNING}</small>
+""", unsafe_allow_html=True)
+
 buying_power = float(account_data.get("buying_power", 0.0))
 margin_used = float(account_data.get("margin_used", 0.0))
 margin_req = float(account_data.get("margin_requirement", 0.0))
@@ -102,11 +104,6 @@ margin_req = float(account_data.get("margin_requirement", 0.0))
 st.markdown(f"""
 <small>💵 Buying Power: ${buying_power:,.2f} | 📉 Margin Used: ${margin_used:,.2f} | 📊 Margin Requirement: ${margin_req:,.2f}</small>
 """, unsafe_allow_html=True)
-""", unsafe_allow_html=True)
-
-# --- Positions ---
-st.subheader("📈 Current Positions")
-positions_data = fetch_positions()
 
 if isinstance(positions_data, list) and positions_data:
     df = pd.DataFrame(positions_data)
