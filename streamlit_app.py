@@ -4,11 +4,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime, date
 from zoneinfo import ZoneInfo
-
-st.set_page_config(page_title="AI Hedge Fund Dashboard", layout="wide")
-
-from streamlit_autorefresh import st_autorefresh
-st_autorefresh(interval=300000, limit=None, key="auto_refresh")  # ⏱️ refresh every 5 mins
+import time  # Add time import to use sleep
 
 API_KEY = st.secrets["APCA_API_KEY_ID"]
 API_SECRET = st.secrets["APCA_API_SECRET_KEY"]
