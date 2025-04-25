@@ -68,14 +68,29 @@ pl_dollar = latest_equity - STARTING_PORTFOLIO_VALUE
 pl_percent = ((latest_equity - STARTING_PORTFOLIO_VALUE) / STARTING_PORTFOLIO_VALUE) * 100
 
 # --- Widget-style Summary ---
-main_cols = st.columns(2)
-main_cols[0].metric("📦 Starting Value", f"${STARTING_PORTFOLIO_VALUE:,.2f}")
-main_cols[1].metric("💼 Current Value", f"${latest_equity:,.2f}")
+# --- Widget-style Summary with Colors and Averages ---
+avg_pl_dollar = pl_dollar / DAYS_RUNNING if DAYS_RUNNING else 0
+avg_pl_percent = pl_percent / DAYS_RUNNING if DAYS_RUNNING else 0
 
-sub_cols = st.columns(3)
-sub_cols[0].metric("📈 P/L $", f"${pl_dollar:,.2f}", delta_color="inverse" if pl_dollar < 0 else "normal")
-sub_cols[1].metric("📊 P/L %", f"{pl_percent:.2f}%", delta_color="inverse" if pl_percent < 0 else "normal")
-sub_cols[2].metric("💵 Buying Power", f"${float(account_data.get('buying_power', 0.0)):,}")
+value_color = "green" if latest_equity > STARTING_PORTFOLIO_VALUE else "red"
+pl_color = "green" if pl_dollar > 0 else "red" if pl_dollar < 0 else "black"
+avg_color = "green" if avg_pl_dollar > 0 else "red" if avg_pl_dollar < 0 else "black"
+
+main_cols = st.columns(2)
+main_cols[0].markdown(f"""
+<div style="font-size:24px;">📦 <b>Starting Value</b></div>
+<div style="font-size:40px;"><b>${STARTING_PORTFOLIO_VALUE:,.2f}</b></div>
+""", unsafe_allow_html=True)
+main_cols[1].markdown(f"""
+<div style="font-size:24px;">💼 <b>Current Value</b></div>
+<div style="font-size:40px; color:{value_color};"><b>${latest_equity:,.2f}</b></div>
+""", unsafe_allow_html=True)
+
+sub_cols = st.columns(4)
+sub_cols[0].markdown(f"📈 **P/L $**\n\n<span style='font-size:26px; color:{pl_color};'><b>${pl_dollar:,.2f}</b></span>", unsafe_allow_html=True)
+sub_cols[1].markdown(f"📊 **P/L %**\n\n<span style='font-size:26px; color:{pl_color};'><b>{pl_percent:.2f}%</b></span>", unsafe_allow_html=True)
+sub_cols[2].markdown(f"📆 **Avg Daily $**\n\n<span style='font-size:26px; color:{avg_color};'><b>${avg_pl_dollar:.2f}</b></span>", unsafe_allow_html=True)
+sub_cols[3].markdown(f"📆 **Avg Daily %**\n\n<span style='font-size:26px; color:{avg_color};'><b>{avg_pl_percent:.2f}%</b></span>", unsafe_allow_html=True)
 
 # --- Informational Text ---
 st.markdown(f"""
