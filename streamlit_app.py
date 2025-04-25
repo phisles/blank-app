@@ -98,8 +98,8 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 buying_power = float(account_data.get("buying_power", 0.0))
-margin_used = float(account_data.get("margin_used", 0.0))
-margin_req = float(account_data.get("margin_requirement", 0.0))
+margin_used = float(account_data.get("initial_margin", 0.0))
+margin_req = float(account_data.get("maintenance_margin", 0.0))
 
 st.markdown(f"""
 <small>💵 Buying Power: ${buying_power:,.2f} | 📉 Margin Used: ${margin_used:,.2f} | 📊 Margin Requirement: ${margin_req:,.2f}</small>
