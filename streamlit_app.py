@@ -2,7 +2,7 @@ import os
 import requests
 import streamlit as st
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, date
 from zoneinfo import ZoneInfo
 
 API_KEY = st.secrets["APCA_API_KEY_ID"]
@@ -18,8 +18,16 @@ HEADERS = {
 st.set_page_config(page_title="Alpaca Dashboard", layout="wide")
 st.title("📈 Alpaca Trading Algo: Live Portfolio Overview")
 
+# --- Starting Values ---
 STARTING_PORTFOLIO_VALUE = 2000.00
-st.metric("🚀 Starting Portfolio Value", f"${STARTING_PORTFOLIO_VALUE:,.2f}")
+START_DATE = date(2025, 4, 22)
+DAYS_RUNNING = (date.today() - START_DATE).days
+
+st.markdown(f"""
+### 📆 Started: **{START_DATE.strftime('%B %d, %Y')}**
+### ⏱ Days Running: **{DAYS_RUNNING}**
+### 💼 Starting Portfolio Value: **${STARTING_PORTFOLIO_VALUE:,.2f}**
+""")
 
 # --- Fetch Functions ---
 def fetch_portfolio_history(timeframe="5Min", period="1D"):
@@ -62,12 +70,17 @@ def fetch_account_activities():
 # --- Account Summary ---
 st.subheader("📋 Account Summary")
 account_data = fetch_account_info()
-col1, col2, col3, col4, col5 = st.columns(5)
-col1.metric("💰 Equity", f"${float(account_data.get('equity', 0.0)):,}")
-col2.metric("🧾 Portfolio Value", f"${float(account_data.get('portfolio_value', 0.0)):,}")
-col3.metric("💵 Buying Power", f"${float(account_data.get('buying_power', 0.0)):,}")
-col4.metric("📉 Margin Used", f"${float(account_data.get('margin_used', 0.0)):,}")
-col5.metric("📊 Maintenance Margin", f"${float(account_data.get('maintenance_margin', 0.0)):,}")
+
+latest_equity = float(account_data.get("portfolio_value", 0.0))
+pl_dollar = latest_equity - STARTING_PORTFOLIO_VALUE
+pl_percent = ((latest_equity - STARTING_PORTFOLIO_VALUE) / STARTING_PORTFOLIO_VALUE) * 100
+
+pl_color = "green" if pl_dollar > 0 else "red" if pl_dollar < 0 else "black"
+
+st.markdown(f"""
+**📈 Total P/L:** <span style='color:{pl_color}'>${pl_dollar:,.2f}</span><br>
+**📊 Total P/L %:** <span style='color:{pl_color}'>{pl_percent:.2f}%</span>
+""", unsafe_allow_html=True)
 
 # --- Positions ---
 st.subheader("📈 Current Positions")
