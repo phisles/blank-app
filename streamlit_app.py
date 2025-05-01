@@ -22,7 +22,7 @@ st.title("AI Hedge Fund Simulator")
 
 # --- Starting Values ---
 STARTING_PORTFOLIO_VALUE = 2000.00
-START_DATE = date(2025, 4, 22)
+START_DATE = date(2025, 4, 28)
 DAYS_RUNNING = (date.today() - START_DATE).days
 
 # --- Fetch Functions ---
