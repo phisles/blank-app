@@ -36,10 +36,10 @@ def fetch_portfolio_history(timeframe="1D", period="5D"):
     response = requests.get(url, headers=HEADERS)
     try:
         data = response.json()
-        st.code(json.dumps(data, indent=2))  # 🔍 Print raw JSON in the app
+        #st.code(json.dumps(data, indent=2))  # 🔍 Print raw JSON in the app
     except Exception as e:
         st.error(f"❌ Failed to parse portfolio history: {e}")
-        #st.code(response.text)  # Show raw text if JSON parsing fails
+        st.code(response.text)  # Show raw text if JSON parsing fails
         return pd.DataFrame()
 
     if "timestamp" not in data or not data["timestamp"]:
