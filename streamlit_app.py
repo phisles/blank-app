@@ -146,7 +146,32 @@ row3[0].markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-row4 = st.columns(1)  # One-column row to match the others
+row4 = st.columns(3)
+
+row4[0].markdown(f"""
+<div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444;">
+<div style="font-size:15px; color:#888;">Sharpe Ratio (1M)</div>
+<div style="font-size:26px; font-family: Courier, monospace; color:{sharpe_color};">{sharpe_ratio:.2f}</div>
+</div>
+""", unsafe_allow_html=True)
+
+row4[1].markdown(f"""
+<div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444;">
+<div style="font-size:15px; color:#888;">Started</div>
+<div style="font-size:20px; font-family: Courier, monospace; color:#ffffff;">
+{START_DATE.strftime('%B %d, %Y')}
+</div>
+</div>
+""", unsafe_allow_html=True)
+
+row4[2].markdown(f"""
+<div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444;">
+<div style="font-size:15px; color:#888;">Days Running</div>
+<div style="font-size:20px; font-family: Courier, monospace; color:#ffffff;">
+{DAYS_RUNNING}
+</div>
+</div>
+""", unsafe_allow_html=True)
 history_df = fetch_portfolio_history(timeframe="1D", period="1M")
 
 if not history_df.empty:
