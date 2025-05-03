@@ -27,7 +27,7 @@ START_DATE = date(2025, 4, 28)
 DAYS_RUNNING = (date.today() - START_DATE).days
 
 # --- Fetch Functions ---
-def fetch_portfolio_history(timeframe="5Min", period="1D"):
+def fetch_portfolio_history(timeframe="1D", period="5D"):
     url = (
         f"{BASE_URL}/v2/account/portfolio/history"
         f"?period={period}&timeframe={timeframe}&pnl_reset=continuous"
@@ -35,6 +35,7 @@ def fetch_portfolio_history(timeframe="5Min", period="1D"):
     response = requests.get(url, headers=HEADERS)
     try:
         data = response.json()
+        print("📊 Raw portfolio history:", json.dumps(data, indent=2))  # DEBUG print
     except Exception as e:
         st.error(f"❌ Failed to parse portfolio history: {e}")
         return pd.DataFrame()
