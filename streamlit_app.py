@@ -147,7 +147,7 @@ row3[0].markdown(f"""
 """, unsafe_allow_html=True)
 
 row4 = st.columns(1)  # One-column row to match the others
-history_df = fetch_portfolio_history(timeframe="1Day", period="1M")
+history_df = fetch_portfolio_history(timeframe="1D", period="1M")
 
 if not history_df.empty:
     returns = history_df["P/L %"].values
