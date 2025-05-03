@@ -150,9 +150,15 @@ row4 = st.columns(1)  # One-column row to match the others
 history_df = fetch_portfolio_history(timeframe="1D", period="1M")
 
 if not history_df.empty:
-    returns = history_df["P/L %"].values
-    average_daily_return = np.mean(returns)
-    std_dev_return = np.std(returns)
+    returns = history_df["P/L %"]
+    returns = returns[returns != 0]  # Filter out zero-change days
+    
+    if not returns.empty:
+        average_daily_return = returns.mean()
+        std_dev_return = returns.std()
+        sharpe_ratio = average_daily_return / std_dev_return if std_dev_return != 0 else 0
+    else:
+        sharpe_ratio = 0
     sharpe_ratio = average_daily_return / std_dev_return if std_dev_return != 0 else 0
     sharpe_color = "#00ffcc" if sharpe_ratio > 1 else "#ffaa00" if sharpe_ratio > 0.5 else "#ff6666"
 
