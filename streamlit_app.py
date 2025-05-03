@@ -27,6 +27,15 @@ STARTING_PORTFOLIO_VALUE = 2000.00
 START_DATE = date(2025, 4, 28)
 DAYS_RUNNING = (date.today() - START_DATE).days
 
+st.markdown(f"""
+<div style="margin-top: 10px; margin-left:5px; margin-right:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444;">
+<div style="font-size:15px; color:#888;">Started</div>
+<div style="font-size:20px; font-family: Courier, monospace; color:#ffffff;">
+{START_DATE.strftime('%B %d, %Y')} &nbsp; | &nbsp; Days Running: {DAYS_RUNNING}
+</div>
+</div>
+""", unsafe_allow_html=True)
+
 # --- Fetch Functions ---
 def fetch_portfolio_history(timeframe="1D", period="5D"):
     url = (
@@ -182,15 +191,6 @@ row3[2].markdown(f"""
 <div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444;">
 <div style="font-size:15px; color:#888;">Margin Requirement</div>
 <div style="font-size:26px; font-family: Courier, monospace; color:#ffaa00;">${margin_req:,.2f}</div>
-</div>
-""", unsafe_allow_html=True)
-
-st.markdown(f"""
-<div style="margin-top: 10px; margin-left:5px; margin-right:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444;">
-<div style="font-size:15px; color:#888;">Started</div>
-<div style="font-size:20px; font-family: Courier, monospace; color:#ffffff;">
-{START_DATE.strftime('%B %d, %Y')} &nbsp; | &nbsp; Days Running: {DAYS_RUNNING}
-</div>
 </div>
 """, unsafe_allow_html=True)
 
