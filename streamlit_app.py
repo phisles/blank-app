@@ -36,7 +36,7 @@ def fetch_portfolio_history(timeframe="1D", period="5D"):
     response = requests.get(url, headers=HEADERS)
     try:
         data = response.json()
-        #st.code(json.dumps(data, indent=2))  # 🔍 Print raw JSON in the app
+        st.code(json.dumps(data, indent=2))  # 🔍 Print raw JSON in the app
     except Exception as e:
         st.error(f"❌ Failed to parse portfolio history: {e}")
         st.code(response.text)  # Show raw text if JSON parsing fails
@@ -88,7 +88,7 @@ avg_pl_percent = pl_percent / DAYS_RUNNING if DAYS_RUNNING else 0
 value_color = "green" if latest_equity > STARTING_PORTFOLIO_VALUE else "red"
 pl_color = "green" if pl_dollar > 0 else "red" if pl_dollar < 0 else "black"
 avg_color = "green" if avg_pl_dollar > 0 else "red" if avg_pl_dollar < 0 else "black"
-sharpe_color = "#00ffcc" if sharpe_ratio > 1 else "#ffaa00" if sharpe_ratio > 0.5 else "#ff6666"
+
 # --- Wrapped Summary Boxes ---
 st.markdown("""
 <div style="padding: 10px 0 20px 0;">
@@ -146,32 +146,7 @@ row3[0].markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-row4 = st.columns(3)
-
-row4[0].markdown(f"""
-<div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444;">
-<div style="font-size:15px; color:#888;">Sharpe Ratio (1M)</div>
-<div style="font-size:26px; font-family: Courier, monospace; color:{sharpe_color};">{sharpe_ratio:.2f}</div>
-</div>
-""", unsafe_allow_html=True)
-
-row4[1].markdown(f"""
-<div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444;">
-<div style="font-size:15px; color:#888;">Started</div>
-<div style="font-size:20px; font-family: Courier, monospace; color:#ffffff;">
-{START_DATE.strftime('%B %d, %Y')}
-</div>
-</div>
-""", unsafe_allow_html=True)
-
-row4[2].markdown(f"""
-<div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444;">
-<div style="font-size:15px; color:#888;">Days Running</div>
-<div style="font-size:20px; font-family: Courier, monospace; color:#ffffff;">
-{DAYS_RUNNING}
-</div>
-</div>
-""", unsafe_allow_html=True)
+row4 = st.columns(1)  # One-column row to match the others
 history_df = fetch_portfolio_history(timeframe="1D", period="1M")
 
 if not history_df.empty:
@@ -185,6 +160,7 @@ if not history_df.empty:
     else:
         sharpe_ratio = 0
     sharpe_ratio = average_daily_return / std_dev_return if std_dev_return != 0 else 0
+    sharpe_color = "#00ffcc" if sharpe_ratio > 1 else "#ffaa00" if sharpe_ratio > 0.5 else "#ff6666"
 
     row4[0].markdown(f"""
     <div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444;">
