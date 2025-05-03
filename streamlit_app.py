@@ -88,7 +88,7 @@ avg_pl_percent = pl_percent / DAYS_RUNNING if DAYS_RUNNING else 0
 value_color = "green" if latest_equity > STARTING_PORTFOLIO_VALUE else "red"
 pl_color = "green" if pl_dollar > 0 else "red" if pl_dollar < 0 else "black"
 avg_color = "green" if avg_pl_dollar > 0 else "red" if avg_pl_dollar < 0 else "black"
-
+sharpe_color = "#00ffcc" if sharpe_ratio > 1 else "#ffaa00" if sharpe_ratio > 0.5 else "#ff6666"
 # --- Wrapped Summary Boxes ---
 st.markdown("""
 <div style="padding: 10px 0 20px 0;">
@@ -185,7 +185,6 @@ if not history_df.empty:
     else:
         sharpe_ratio = 0
     sharpe_ratio = average_daily_return / std_dev_return if std_dev_return != 0 else 0
-    sharpe_color = "#00ffcc" if sharpe_ratio > 1 else "#ffaa00" if sharpe_ratio > 0.5 else "#ff6666"
 
     row4[0].markdown(f"""
     <div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444;">
