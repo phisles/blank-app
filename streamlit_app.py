@@ -7,6 +7,7 @@ from zoneinfo import ZoneInfo
 import json
 import time  # Add time import to use sleep
 import numpy as np
+import altair as alt  # ✅ Make sure this is imported at the top
 
 API_KEY = st.secrets["APCA_API_KEY_ID"]
 API_SECRET = st.secrets["APCA_API_SECRET_KEY"]
@@ -179,10 +180,21 @@ if not cleaned_history.empty:
             📈 Portfolio Value Over Time (1D Resolution)
         </div>
         """, unsafe_allow_html=True)
-    
-        chart_data = cleaned_history.set_index("Time")[["Equity"]]
-        chart_data = chart_data.applymap(lambda x: float(str(x).replace("$", "").replace(",", "")))
-        st.line_chart(chart_data, use_container_width=True)
+        
+        chart_data = cleaned_history.copy()
+        chart_data["Equity"] = chart_data["Equity"].replace('[\$,]', '', regex=True).astype(float)
+        
+        line = alt.Chart(chart_data).mark_line(color="#00ffcc").encode(
+            x=alt.X("Time:T", title="Date"),
+            y=alt.Y("Equity:Q", title="Portfolio Value"),
+            tooltip=["Time:T", alt.Tooltip("Equity:Q", format="$.2f")]
+        ).properties(
+            width="container",
+            height=300,
+            title="📈 Portfolio Value Over Time (Altair)"
+        )
+        
+        st.altair_chart(line, use_container_width=True)
 else:
     st.info("No meaningful portfolio history data to display.")
 
