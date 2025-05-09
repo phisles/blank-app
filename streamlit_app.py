@@ -191,7 +191,7 @@ if not cleaned_history.empty:
         # Altair chart with interactive tooltip
         line = alt.Chart(chart_data).mark_line(color="#00ffcc").encode(
             x=alt.X("Time:T", title="Date"),
-            y=alt.Y("Equity:Q", title="Portfolio Value"),
+            y=alt.Y("Equity:Q", title="Portfolio Value", scale=alt.Scale(domain=[1900, 2200]))
             tooltip=[
                 alt.Tooltip("Time:T", title="Date"),
                 alt.Tooltip("Equity:Q", format="$.2f", title="Equity"),
