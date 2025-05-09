@@ -156,6 +156,7 @@ row3[0].markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
+
 # --- Filtered Daily History Table ---
 history_df = fetch_portfolio_history(timeframe="1D", period="1M")
 cleaned_history = history_df[
@@ -163,10 +164,6 @@ cleaned_history = history_df[
 ].copy()
 
 if not cleaned_history.empty:
-    cleaned_history["P/L %"] = cleaned_history["P/L %"].map("{:.4f}%".format)
-    cleaned_history["P/L $"] = cleaned_history["P/L $"].map("${:,.2f}".format)
-    cleaned_history["Equity"] = cleaned_history["Equity"].map("${:,.2f}".format)
-
     st.markdown("""
     <div style="margin:15px 0 5px 0; font-size:18px; font-weight:bold; color:#00ffcc;">
         📅 Portfolio P&L History (1D Resolution)
@@ -177,21 +174,28 @@ if not cleaned_history.empty:
     with row5[0]:
         st.markdown("""
         <div style="margin:15px 0 5px 0; font-size:18px; font-weight:bold; color:#00ffcc;">
-            📈 Portfolio Value Over Time (1D Resolution)
+            📈 Portfolio Value Over Time (Altair)
         </div>
         """, unsafe_allow_html=True)
-        
-        
-        # Clean float values
+
+        # Clean values
         chart_data = cleaned_history.copy()
         chart_data["Equity"] = chart_data["Equity"].replace('[\$,]', '', regex=True).astype(float)
         chart_data["P/L $"] = chart_data["P/L $"].replace('[\$,]', '', regex=True).astype(float)
-        chart_data["P/L %"] = chart_data["P/L %"].replace('[\%]', '', regex=True).astype(float)
-        
-        # Altair chart with interactive tooltip
+        chart_data["P/L %"] = chart_data["P/L %"].replace('%', '', regex=True).astype(float)
+
+        # Selectbox to toggle metric
+        selected_metric = st.selectbox("Select Metric", ["Equity", "P/L $", "P/L %"])
+
+        y_min = chart_data[selected_metric].min()
+        y_max = chart_data[selected_metric].max()
+        y_range = y_max - y_min
+        padding = y_range * 0.1 if y_range > 0 else 10
+
         line = alt.Chart(chart_data).mark_line(color="#00ffcc").encode(
             x=alt.X("Time:T", title="Date"),
-            y=alt.Y("Equity:Q", title="Portfolio Value", scale=alt.Scale(domain=[1900, 2200]))
+            y=alt.Y(f"{selected_metric}:Q", title=selected_metric,
+                    scale=alt.Scale(domain=[y_min - padding, y_max + padding])),
             tooltip=[
                 alt.Tooltip("Time:T", title="Date"),
                 alt.Tooltip("Equity:Q", format="$.2f", title="Equity"),
@@ -199,12 +203,10 @@ if not cleaned_history.empty:
                 alt.Tooltip("P/L %:Q", format=".2f", title="P/L %")
             ]
         ).properties(
-            width="container",
-            height=300,
-            title="📈 Portfolio Value Over Time (Altair)"
+            height=300
         )
-        
-        st.altair_chart(line, use_container_width=True)
+
+        st.altair_chart(line.interactive(), use_container_width=True)
 else:
     st.info("No meaningful portfolio history data to display.")
 
