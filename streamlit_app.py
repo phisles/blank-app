@@ -18,7 +18,7 @@ HEADERS = {
     "APCA-API-SECRET-KEY": API_SECRET
 }
 
-st.set_page_config(page_title="AI Hedge Fund Dashboard", layout="wide")
+st.set_page_config(page_title="!AI Hedge Fund Dashboard", layout="wide")
 st.markdown("""<style>* { font-family: Courier, monospace !important; }</style>""", unsafe_allow_html=True)
 st.title("AI Hedge Fund Simulator")
 
