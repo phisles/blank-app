@@ -172,11 +172,6 @@ if not cleaned_history.empty:
 
     row5 = st.columns(1)
     with row5[0]:
-        st.markdown("""
-        <div style="margin:15px 0 5px 0; font-size:18px; font-weight:bold; color:#00ffcc;">
-            📈 Portfolio Value Over Time (Altair)
-        </div>
-        """, unsafe_allow_html=True)
 
         # Clean values
         chart_data = cleaned_history.copy()
