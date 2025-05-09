@@ -18,7 +18,7 @@ HEADERS = {
     "APCA-API-SECRET-KEY": API_SECRET
 }
 
-st.set_page_config(page_title="!AI Hedge Fund Dashboard", layout="wide")
+st.set_page_config(page_title="AI Hedge Fund Dashboard", layout="wide")
 st.markdown("""<style>* { font-family: Courier, monospace !important; }</style>""", unsafe_allow_html=True)
 st.title("AI Hedge Fund Simulator")
 
@@ -155,9 +155,35 @@ row3[0].markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-row4 = st.columns(1)  # One-column row to match the others
-history_df = fetch_portfolio_history(timeframe="1D", period="1M")
-st.write("📊 Raw history_df shape:", history_df.shape)
+# --- Filtered Daily History Table ---
+cleaned_history = history_df[
+    ~((history_df["P/L %"] == 0) & (history_df["P/L $"] == 0) & (history_df["Equity"] == 0))
+].copy()
+
+if not cleaned_history.empty:
+    cleaned_history["P/L %"] = cleaned_history["P/L %"].map("{:.4f}%".format)
+    cleaned_history["P/L $"] = cleaned_history["P/L $"].map("${:,.2f}".format)
+    cleaned_history["Equity"] = cleaned_history["Equity"].map("${:,.2f}".format)
+
+    st.markdown("""
+    <div style="margin:15px 0 5px 0; font-size:18px; font-weight:bold; color:#00ffcc;">
+        📅 Portfolio P&L History (1D Resolution)
+    </div>
+    """, unsafe_allow_html=True)
+
+    row5 = st.columns(1)
+    with row5[0]:
+        st.markdown("""
+        <div style="margin:15px 0 5px 0; font-size:18px; font-weight:bold; color:#00ffcc;">
+            📈 Portfolio Value Over Time (1D Resolution)
+        </div>
+        """, unsafe_allow_html=True)
+    
+        chart_data = cleaned_history.set_index("Time")[["Equity"]]
+        chart_data = chart_data.applymap(lambda x: float(str(x).replace("$", "").replace(",", "")))
+        st.line_chart(chart_data, use_container_width=True)
+else:
+    st.info("No meaningful portfolio history data to display.")
 
 if not history_df.empty:
     returns = history_df["P/L %"]
@@ -254,25 +280,7 @@ if isinstance(positions_data, list) and positions_data:
 else:
     st.warning("No positions found.")
 
-# --- Filtered Daily History Table ---
-cleaned_history = history_df[
-    ~((history_df["P/L %"] == 0) & (history_df["P/L $"] == 0) & (history_df["Equity"] == 0))
-].copy()
 
-if not cleaned_history.empty:
-    cleaned_history["P/L %"] = cleaned_history["P/L %"].map("{:.4f}%".format)
-    cleaned_history["P/L $"] = cleaned_history["P/L $"].map("${:,.2f}".format)
-    cleaned_history["Equity"] = cleaned_history["Equity"].map("${:,.2f}".format)
-
-    st.markdown("""
-    <div style="margin:15px 0 5px 0; font-size:18px; font-weight:bold; color:#00ffcc;">
-        📅 Portfolio P&L History (1D Resolution)
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.dataframe(cleaned_history.set_index("Time"), use_container_width=True)
-else:
-    st.info("No meaningful portfolio history data to display.")
 # --- Activities ---
 st.subheader("Recent Account Activities")
 activities_data = fetch_account_activities()
