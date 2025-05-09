@@ -157,6 +157,7 @@ row3[0].markdown(f"""
 
 row4 = st.columns(1)  # One-column row to match the others
 history_df = fetch_portfolio_history(timeframe="1D", period="1M")
+st.write("📊 Raw history_df shape:", history_df.shape)
 
 if not history_df.empty:
     returns = history_df["P/L %"]
