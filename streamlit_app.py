@@ -186,6 +186,7 @@ if not cleaned_history.empty:
 else:
     st.info("No meaningful portfolio history data to display.")
 
+row4 = st.columns(1)
 if not history_df.empty:
     returns = history_df["P/L %"]
     returns = returns[returns != 0]  # Filter out zero-change days
