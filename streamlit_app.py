@@ -181,13 +181,23 @@ if not cleaned_history.empty:
         </div>
         """, unsafe_allow_html=True)
         
+        
+        # Clean float values
         chart_data = cleaned_history.copy()
         chart_data["Equity"] = chart_data["Equity"].replace('[\$,]', '', regex=True).astype(float)
+        chart_data["P/L $"] = chart_data["P/L $"].replace('[\$,]', '', regex=True).astype(float)
+        chart_data["P/L %"] = chart_data["P/L %"].replace('[\%]', '', regex=True).astype(float)
         
+        # Altair chart with interactive tooltip
         line = alt.Chart(chart_data).mark_line(color="#00ffcc").encode(
             x=alt.X("Time:T", title="Date"),
             y=alt.Y("Equity:Q", title="Portfolio Value"),
-            tooltip=["Time:T", alt.Tooltip("Equity:Q", format="$.2f")]
+            tooltip=[
+                alt.Tooltip("Time:T", title="Date"),
+                alt.Tooltip("Equity:Q", format="$.2f", title="Equity"),
+                alt.Tooltip("P/L $:Q", format="$.2f", title="P/L $"),
+                alt.Tooltip("P/L %:Q", format=".2f", title="P/L %")
+            ]
         ).properties(
             width="container",
             height=300,
