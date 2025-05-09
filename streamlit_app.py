@@ -180,6 +180,26 @@ if not history_df.empty:
 else:
     row4[0].warning("⚠️ No portfolio history available for Sharpe Ratio.")
 
+# --- Filtered Daily History Table ---
+cleaned_history = history_df[
+    ~((history_df["P/L %"] == 0) & (history_df["P/L $"] == 0) & (history_df["Equity"] == 0))
+].copy()
+
+if not cleaned_history.empty:
+    cleaned_history["P/L %"] = cleaned_history["P/L %"].map("{:.4f}%".format)
+    cleaned_history["P/L $"] = cleaned_history["P/L $"].map("${:,.2f}".format)
+    cleaned_history["Equity"] = cleaned_history["Equity"].map("${:,.2f}".format)
+
+    st.markdown("""
+    <div style="margin:15px 0 5px 0; font-size:18px; font-weight:bold; color:#00ffcc;">
+        📅 Portfolio P&L History (1D Resolution)
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.dataframe(cleaned_history.set_index("Time"), use_container_width=True)
+else:
+    st.info("No meaningful portfolio history data to display.")
+
 row3[1].markdown(f"""
 <div style="margin:5px; padding:12px; border-radius:8px; background-color:#2a2a2a; border:1px solid #444;">
 <div style="font-size:15px; color:#888;">Margin Used</div>
