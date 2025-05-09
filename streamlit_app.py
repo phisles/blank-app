@@ -156,6 +156,7 @@ row3[0].markdown(f"""
 """, unsafe_allow_html=True)
 
 # --- Filtered Daily History Table ---
+history_df = fetch_portfolio_history(timeframe="1D", period="1M")
 cleaned_history = history_df[
     ~((history_df["P/L %"] == 0) & (history_df["P/L $"] == 0) & (history_df["Equity"] == 0))
 ].copy()
